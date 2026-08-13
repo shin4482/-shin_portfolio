@@ -1179,3 +1179,13 @@ main > section {
         height: 260px;
     }
 }
+/* =========================================================
+   PROJECT SEPARATORS
+   Adds a subtle divider between project entries only.
+   ========================================================= */
+
+.featured-project + .featured-project {
+    border-top: 1px solid var(--border);
+    margin-top: 55px;
+    padding-top: 55px;
+}
