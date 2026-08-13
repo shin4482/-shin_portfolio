@@ -748,3 +748,23 @@ a:focus-visible {
         text-align: center;
     }
 }
+/* =========================================================
+   TOOLS SECTION SPACING FIX
+   ========================================================= */
+
+.tools-section {
+    padding-top: 75px;
+    padding-bottom: 55px;
+}
+
+.tools-section .section-heading {
+    margin-bottom: 25px;
+}
+
+.tools-list {
+    margin-bottom: 0;
+}
+
+#projects {
+    padding-top: 65px;
+}
