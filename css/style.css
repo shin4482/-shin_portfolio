@@ -445,13 +445,19 @@ nav > div a:hover {
    SKILLS
    ========================================================= */
 
-section ul {
-    margin-top: 20px;
+#skills h3 {
+    margin-top: 16px;
+    margin-bottom: 4px;
 }
 
-section li {
+#skills p {
+    margin-top: 0;
     margin-bottom: 8px;
-    color: var(--text-soft);
+    line-height: 1.6;
+}
+
+#skills h3:first-of-type {
+    margin-top: 0;
 }
 
 /* =========================================================
