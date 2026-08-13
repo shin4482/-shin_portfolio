@@ -1047,27 +1047,32 @@ main > section {
         height: 260px;
     }
 }
-/* HERO PROFILE POSITION */
+/* =========================================================
+   HERO PROFILE — TWO COLUMN LAYOUT
+   ========================================================= */
 
 #home {
-    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    align-items: center;
+    column-gap: 60px;
+}
+
+#home .hero-content {
+    width: 100%;
+    max-width: 700px;
 }
 
 #home .hero-image {
-    position: absolute;
-    right: 8%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 360px;
-    height: 360px;
+    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
 #home .profile-photo {
-    width: 360px;
-    height: 360px;
+    width: 340px;
+    height: 340px;
     object-fit: cover;
     object-position: center 25%;
     border-radius: 50%;
@@ -1075,23 +1080,27 @@ main > section {
     box-shadow: 0 0 0 12px rgba(32, 201, 181, 0.08);
 }
 
-/* Keep hero text on the left */
-#home .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 650px;
-}
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
-/* Mobile */
 @media (max-width: 800px) {
+
+    #home {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    #home .hero-content {
+        max-width: 700px;
+        width: 100%;
+    }
+
     #home .hero-image {
-        position: relative;
-        right: auto;
-        top: auto;
-        transform: none;
-        width: 260px;
-        height: 260px;
-        margin: 30px auto 0;
+        width: 100%;
+        order: 2;
     }
 
     #home .profile-photo {
