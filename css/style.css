@@ -768,3 +768,53 @@ a:focus-visible {
 #projects {
     padding-top: 65px;
 }
+/* =========================================================
+   FINAL SECTION SPACING CLEANUP
+   ========================================================= */
+
+/* Reduce the excessive vertical spacing between sections */
+main > section {
+    padding-top: 65px;
+    padding-bottom: 65px;
+}
+
+/* Skills */
+#skills {
+    padding-bottom: 35px;
+}
+
+/* Tools */
+.tools-section {
+    padding-top: 35px;
+    padding-bottom: 35px;
+}
+
+/* Projects */
+#projects {
+    padding-top: 55px;
+}
+
+/* Creative Work */
+#creative {
+    padding-top: 65px;
+}
+
+/* Testimonials */
+.testimonials {
+    padding-top: 65px;
+}
+
+/* Contact */
+#contact {
+    padding-top: 65px;
+}
+
+/* Keep headings compact */
+.section-heading {
+    margin-bottom: 28px;
+}
+
+/* Don't create extra vertical space from empty/short sections */
+.tools-list {
+    margin-bottom: 0;
+}
