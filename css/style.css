@@ -298,7 +298,10 @@ nav > div a:hover {
    ========================================================= */
 
 #about {
-    max-width: 900px;
+    width: min(var(--container), calc(100% - 40px));
+    max-width: var(--container);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #about p {
