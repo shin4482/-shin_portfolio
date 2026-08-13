@@ -1047,3 +1047,55 @@ main > section {
         height: 260px;
     }
 }
+/* HERO PROFILE POSITION */
+
+#home {
+    position: relative;
+}
+
+#home .hero-image {
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 360px;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#home .profile-photo {
+    width: 360px;
+    height: 360px;
+    object-fit: cover;
+    object-position: center 25%;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 0 12px rgba(32, 201, 181, 0.08);
+}
+
+/* Keep hero text on the left */
+#home .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 650px;
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+    #home .hero-image {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
+        width: 260px;
+        height: 260px;
+        margin: 30px auto 0;
+    }
+
+    #home .profile-photo {
+        width: 260px;
+        height: 260px;
+    }
+}
