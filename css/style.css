@@ -786,6 +786,24 @@ main > section {
 #skills {
     padding-bottom: 35px;
 }
+/* =========================
+   SKILLS — SPACING & RHYTHM
+   ========================= */
+
+#skills h3 {
+    margin-top: 18px;
+    margin-bottom: 5px;
+}
+
+#skills h3:first-child {
+    margin-top: 0;
+}
+
+#skills p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
 
 /* Tools */
 .tools-section {
