@@ -1229,3 +1229,76 @@ main > section {
 .experience-responsibilities + .experience-responsibilities {
     margin-top: 20px;
 }
+/* =========================================
+   CLIENT FEEDBACK / TESTIMONIALS
+   ========================================= */
+
+.testimonials-section {
+    padding-top: 90px;
+    padding-bottom: 90px;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.testimonial-card {
+    background: #ffffff;
+    border: 1px solid #dfe4ea;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.testimonial-rating {
+    color: var(--primary);
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+}
+
+.testimonial-text {
+    margin: 0 0 24px;
+    line-height: 1.7;
+}
+
+.testimonial-author {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.testimonial-author strong {
+    color: var(--text);
+}
+
+.testimonial-author span {
+    color: var(--text-soft);
+    font-size: 14px;
+}
+
+.testimonial-cta {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.testimonial-cta p {
+    margin-bottom: 20px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonial-card {
+        padding: 24px;
+    }
+
+}
