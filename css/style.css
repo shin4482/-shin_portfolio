@@ -1302,3 +1302,30 @@ main > section {
     }
 
 }
+/* =========================================
+   CLIENT FEEDBACK — LEAVE FEEDBACK BUTTON
+   ========================================= */
+
+.testimonial-cta .btn.primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 22px;
+
+    border-radius: 999px;
+
+    background: var(--primary);
+    color: #ffffff;
+
+    font-weight: 600;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+.testimonial-cta .btn.primary:hover {
+    transform: translateY(-2px);
+}
