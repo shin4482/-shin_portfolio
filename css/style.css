@@ -999,3 +999,51 @@ main > section {
     object-position: center 25%;
     border-radius: 50%;
 }
+/* HERO WITH PROFILE IMAGE */
+
+#home {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+
+#home .hero-content {
+    flex: 1;
+    max-width: 700px;
+}
+
+#home .hero-image {
+    flex: 0 0 360px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#home .profile-photo {
+    width: 360px;
+    height: 360px;
+    object-fit: cover;
+    object-position: center 25%;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 0 12px rgba(32, 201, 181, 0.08);
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+    #home {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    #home .hero-image {
+        flex: none;
+        order: -1;
+    }
+
+    #home .profile-photo {
+        width: 260px;
+        height: 260px;
+    }
+}
