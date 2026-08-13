@@ -1202,4 +1202,6 @@ main > section {
     border-radius: 12px;
     background: #ffffff;
 }
-
+.experience-responsibilities + .experience-responsibilities {
+    margin-top: 20px;
+}
