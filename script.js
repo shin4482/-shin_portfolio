@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
      * =========================================================
      */
 
-    const GITHUB_USERNAME = "YOUR-GITHUB-USERNAME";
-    const GITHUB_REPOSITORY = "YOUR-REPOSITORY-NAME";
+    const GITHUB_USERNAME = "shin4482";
+    const GITHUB_REPOSITORY = "shin_portfolio";
 
     /*
      * The GitHub label used to identify testimonials
