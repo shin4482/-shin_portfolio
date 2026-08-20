@@ -12,12 +12,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
      * =========================================================
+     * GOOGLE FORM
+     * =========================================================
+     */
+
+    const FEEDBACK_FORM_URL =
+        "https://docs.google.com/forms/d/1kRQ2thSS6DwnC6CLwWpONDzCCjmQf-sj3BDQEDuzbT0/view";
+
+
+    /*
+     * =========================================================
      * TESTIMONIAL CONTAINER
      * =========================================================
      */
 
     const testimonialGrid =
         document.querySelector(".testimonial-grid");
+
+
+    /*
+     * =========================================================
+     * LEAVE FEEDBACK BUTTON
+     * =========================================================
+     */
+
+    const feedbackButton =
+        document.getElementById("open-feedback");
+
+
+    if (feedbackButton) {
+
+        feedbackButton.addEventListener("click", () => {
+
+            window.location.href =
+                FEEDBACK_FORM_URL;
+
+        });
+
+    }
 
 
     /*
@@ -29,23 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadTestimonials() {
 
         if (!testimonialGrid) {
-            console.error(
-                "Testimonial grid not found."
-            );
-
             return;
         }
 
 
         /*
-         * Show loading message
+         * Start with an empty testimonial area.
+         * No placeholder text.
          */
 
-        testimonialGrid.innerHTML = `
-            <p class="testimonial-loading">
-                Loading testimonials...
-            </p>
-        `;
+        testimonialGrid.innerHTML = "";
 
 
         try {
@@ -68,7 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             /*
-             * No testimonials yet
+             * No approved testimonials yet.
+             * Leave the area empty.
              */
 
             if (
@@ -76,22 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 testimonials.length === 0
             ) {
 
-                showEmptyTestimonials();
-
                 return;
 
             }
 
 
             /*
-             * Clear loading message
-             */
-
-            testimonialGrid.innerHTML = "";
-
-
-            /*
-             * Create testimonial cards
+             * Create testimonial cards.
              */
 
             testimonials.forEach(
@@ -101,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         createTestimonialCard(
                             testimonial
                         );
+
 
                     testimonialGrid.appendChild(
                         card
@@ -112,17 +130,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
 
+            /*
+             * Keep the testimonial area empty
+             * if the API is unavailable.
+             */
+
             console.error(
                 "Unable to load testimonials:",
                 error
             );
 
-
-            testimonialGrid.innerHTML = `
-                <p class="testimonial-loading">
-                    Testimonials are temporarily unavailable.
-                </p>
-            `;
+            testimonialGrid.innerHTML = "";
 
         }
 
@@ -218,7 +236,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         /*
          * Service / Project
-
          */
 
         const service =
@@ -253,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /*
-         * Build card
+         * Build testimonial card
          */
 
         article.appendChild(
@@ -326,25 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
      * =========================================================
-     * EMPTY STATE
-     * =========================================================
-     */
-
-    function showEmptyTestimonials() {
-
-        testimonialGrid.innerHTML = `
-            <p class="testimonial-loading">
-                Client testimonials will appear here
-                once approved.
-            </p>
-        `;
-
-    }
-
-
-    /*
-     * =========================================================
-     * START
+     * START TESTIMONIAL SYSTEM
      * =========================================================
      */
 
