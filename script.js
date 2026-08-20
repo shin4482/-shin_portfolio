@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
      */
 
     const FEEDBACK_FORM_URL =
-        "https://docs.google.com/forms/d/1kRQ2thSS6DwnC6CLwWpONDzCCjmQf-sj3BDQEDuzbT0/view";
+         "https://docs.google.com/forms/d/e/1FAIpQLSfyDzPwMvTMNCzftbwUW3a6nHaomKz9XDwOMmBGnrCBTFS35Q/viewform";
 
 
     /*
