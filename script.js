@@ -2,206 +2,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
      * =========================================================
-     * TESTIMONIAL SYSTEM CONFIGURATION
+     * GOOGLE APPS SCRIPT WEB APP
      * =========================================================
      */
 
-    const GITHUB_USERNAME = "shin4482";
-    const GITHUB_REPOSITORY = "shin_portfolio";
-
-    /*
-     * The GitHub label used to identify testimonials
-     * that you have approved for public display.
-     */
-
-    const APPROVED_LABEL = "approved";
+    const TESTIMONIAL_API =
+        "https://script.google.com/macros/s/AKfycbxS13xPvRn95mG_-RKpLSjXQHz2IO0DV6FjofzKX-yz4njefrjCb-Uacz3WekU7Jvi6/exec";
 
 
     /*
      * =========================================================
-     * ELEMENTS
+     * TESTIMONIAL CONTAINER
      * =========================================================
      */
 
     const testimonialGrid =
         document.querySelector(".testimonial-grid");
 
-    const feedbackModal =
-        document.getElementById("feedback-modal");
-
-    const openFeedbackButton =
-        document.getElementById("open-feedback");
-
-    const closeFeedbackButton =
-        document.getElementById("close-feedback");
-
-    const testimonialForm =
-        document.getElementById("testimonial-form");
-
-    const feedbackStatus =
-        document.getElementById("feedback-status");
-
 
     /*
      * =========================================================
-     * OPEN FEEDBACK MODAL
-     * =========================================================
-     */
-
-    if (openFeedbackButton) {
-
-        openFeedbackButton.addEventListener("click", () => {
-
-            feedbackModal.classList.add("active");
-
-            feedbackModal.setAttribute(
-                "aria-hidden",
-                "false"
-            );
-
-            document.body.classList.add(
-                "feedback-modal-open"
-            );
-
-        });
-
-    }
-
-
-    /*
-     * =========================================================
-     * CLOSE FEEDBACK MODAL
-     * =========================================================
-     */
-
-    function closeFeedbackModal() {
-
-        if (!feedbackModal) {
-            return;
-        }
-
-        feedbackModal.classList.remove("active");
-
-        feedbackModal.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        document.body.classList.remove(
-            "feedback-modal-open"
-        );
-
-    }
-
-
-    if (closeFeedbackButton) {
-
-        closeFeedbackButton.addEventListener(
-            "click",
-            closeFeedbackModal
-        );
-
-    }
-
-
-    /*
-     * Close when clicking outside the modal
-     */
-
-    if (feedbackModal) {
-
-        feedbackModal.addEventListener(
-            "click",
-            (event) => {
-
-                if (
-                    event.target === feedbackModal
-                ) {
-
-                    closeFeedbackModal();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /*
-     * Close with ESC key
-     */
-
-    document.addEventListener(
-        "keydown",
-        (event) => {
-
-            if (event.key === "Escape") {
-
-                closeFeedbackModal();
-
-            }
-
-        }
-    );
-
-
-    /*
-     * =========================================================
-     * LOAD APPROVED TESTIMONIALS
+     * LOAD TESTIMONIALS
      * =========================================================
      */
 
     async function loadTestimonials() {
 
         if (!testimonialGrid) {
+            console.error(
+                "Testimonial grid not found."
+            );
+
             return;
         }
 
-        /*
-         * Clear the placeholder.
-         */
-
-        testimonialGrid.innerHTML = "";
-
 
         /*
-         * GitHub Issues API
-         *
-         * Only issues with the APPROVED_LABEL
-         * will be displayed.
+         * Show loading message
          */
 
-        const apiUrl =
-            `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}/issues?state=open&labels=${encodeURIComponent(APPROVED_LABEL)}&per_page=20`;
+        testimonialGrid.innerHTML = `
+            <p class="testimonial-loading">
+                Loading testimonials...
+            </p>
+        `;
 
 
         try {
 
             const response =
-                await fetch(apiUrl);
+                await fetch(TESTIMONIAL_API);
 
 
             if (!response.ok) {
 
                 throw new Error(
-                    `GitHub API error: ${response.status}`
+                    `HTTP error: ${response.status}`
                 );
 
             }
 
 
-            const issues =
+            const testimonials =
                 await response.json();
 
 
             /*
-             * No approved testimonials
+             * No testimonials yet
              */
 
             if (
-                !Array.isArray(issues) ||
-                issues.length === 0
+                !Array.isArray(testimonials) ||
+                testimonials.length === 0
             ) {
 
                 showEmptyTestimonials();
@@ -212,15 +84,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             /*
-             * Display each approved testimonial.
+             * Clear loading message
              */
 
-            issues.forEach((issue) => {
+            testimonialGrid.innerHTML = "";
 
-                const testimonial =
-                    parseTestimonial(issue);
 
-                if (testimonial) {
+            /*
+             * Create testimonial cards
+             */
+
+            testimonials.forEach(
+                testimonial => {
 
                     const card =
                         createTestimonialCard(
@@ -232,21 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
 
                 }
+            );
 
-            });
-
-
-            /*
-             * If nothing could be parsed
-             */
-
-            if (
-                testimonialGrid.children.length === 0
-            ) {
-
-                showEmptyTestimonials();
-
-            }
 
         } catch (error) {
 
@@ -255,7 +117,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 error
             );
 
-            showEmptyTestimonials();
+
+            testimonialGrid.innerHTML = `
+                <p class="testimonial-loading">
+                    Testimonials are temporarily unavailable.
+                </p>
+            `;
 
         }
 
@@ -264,136 +131,156 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
      * =========================================================
-     * PARSE TESTIMONIAL
+     * CREATE TESTIMONIAL CARD
      * =========================================================
-     *
-     * Expected GitHub Issue format:
-     *
-     * Name:
-     * Business:
-     * Role:
-     * Rating:
-     * Feedback:
-     *
      */
 
-    function parseTestimonial(issue) {
+    function createTestimonialCard(
+        testimonial
+    ) {
 
-        const body =
-            issue.body || "";
-
-
-        const name =
-            extractField(
-                body,
-                "Name"
+        const article =
+            document.createElement(
+                "article"
             );
 
 
-        const business =
-            extractField(
-                body,
-                "Business"
-            );
+        article.className =
+            "testimonial-card";
 
 
-        const role =
-            extractField(
-                body,
-                "Role"
-            );
-
+        /*
+         * Rating
+         */
 
         const rating =
-            extractField(
-                body,
-                "Rating"
+            document.createElement(
+                "div"
             );
 
+
+        rating.className =
+            "testimonial-rating";
+
+
+        rating.textContent =
+            formatRating(
+                testimonial.rating
+            );
+
+
+        /*
+         * Feedback
+         */
 
         const feedback =
-            extractField(
-                body,
-                "Feedback"
+            document.createElement(
+                "p"
             );
+
+
+        feedback.className =
+            "testimonial-text";
+
+
+        feedback.textContent =
+            testimonial.feedback;
+
+
+        /*
+         * Author
+         */
+
+        const author =
+            document.createElement(
+                "div"
+            );
+
+
+        author.className =
+            "testimonial-author";
+
+
+        /*
+         * Name
+         */
+
+        const name =
+            document.createElement(
+                "strong"
+            );
+
+
+        name.textContent =
+            testimonial.name ||
+            "Anonymous";
+
+
+        /*
+         * Service / Project
+
+         */
+
+        const service =
+            document.createElement(
+                "span"
+            );
+
+
+        service.textContent =
+            testimonial.service ||
+            "";
+
+
+        /*
+         * Build author section
+         */
+
+        author.appendChild(
+            name
+        );
 
 
         if (
-            !name ||
-            !feedback
+            testimonial.service
         ) {
 
-            return null;
-
-        }
-
-
-        return {
-
-            name: name,
-
-            business:
-                business ||
-                "Client",
-
-            role:
-                role ||
-                "",
-
-            rating:
-                normalizeRating(
-                    rating
-                ),
-
-            feedback:
-                feedback
-
-        };
-
-    }
-
-
-    /*
-     * =========================================================
-     * EXTRACT ISSUE FIELD
-     * =========================================================
-     */
-
-    function extractField(
-        text,
-        fieldName
-    ) {
-
-        const regex =
-            new RegExp(
-                `(?:^|\\n)${fieldName}:\\s*(.*)`,
-                "i"
+            author.appendChild(
+                service
             );
 
-
-        const match =
-            text.match(regex);
-
-
-        if (!match) {
-
-            return "";
-
         }
 
 
-        return match[1].trim();
+        /*
+         * Build card
+         */
+
+        article.appendChild(
+            rating
+        );
+
+        article.appendChild(
+            feedback
+        );
+
+        article.appendChild(
+            author
+        );
+
+
+        return article;
 
     }
 
 
     /*
      * =========================================================
-     * NORMALIZE RATING
+     * FORMAT RATING
      * =========================================================
      */
 
-    function normalizeRating(
+    function formatRating(
         rating
     ) {
 
@@ -439,316 +326,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
      * =========================================================
-     * CREATE TESTIMONIAL CARD
-     * =========================================================
-     */
-
-    function createTestimonialCard(
-        testimonial
-    ) {
-
-        const article =
-            document.createElement(
-                "article"
-            );
-
-
-        article.className =
-            "testimonial-card";
-
-
-        /*
-         * Rating
-         */
-
-        const rating =
-            document.createElement(
-                "div"
-            );
-
-
-        rating.className =
-            "testimonial-rating";
-
-
-        rating.textContent =
-            testimonial.rating;
-
-
-        /*
-         * Feedback
-         */
-
-        const feedback =
-            document.createElement(
-                "p"
-            );
-
-
-        feedback.className =
-            "testimonial-text";
-
-
-        feedback.textContent =
-            testimonial.feedback;
-
-
-        /*
-         * Author container
-         */
-
-        const author =
-            document.createElement(
-                "div"
-            );
-
-
-        author.className =
-            "testimonial-author";
-
-
-        /*
-         * Name
-         */
-
-        const name =
-            document.createElement(
-                "strong"
-            );
-
-
-        name.textContent =
-            testimonial.name;
-
-
-        /*
-         * Business / Role
-         */
-
-        const details =
-            document.createElement(
-                "span"
-            );
-
-
-        if (
-            testimonial.role
-        ) {
-
-            details.textContent =
-                `${testimonial.business} • ${testimonial.role}`;
-
-        } else {
-
-            details.textContent =
-                testimonial.business;
-
-        }
-
-
-        author.appendChild(
-            name
-        );
-
-        author.appendChild(
-            details
-        );
-
-
-        /*
-         * Build card
-         */
-
-        article.appendChild(
-            rating
-        );
-
-        article.appendChild(
-            feedback
-        );
-
-        article.appendChild(
-            author
-        );
-
-
-        return article;
-
-    }
-
-
-    /*
-     * =========================================================
-     * EMPTY TESTIMONIAL STATE
+     * EMPTY STATE
      * =========================================================
      */
 
     function showEmptyTestimonials() {
 
-        if (!testimonialGrid) {
-            return;
-        }
-
-
-        testimonialGrid.innerHTML = "";
-
-
-        const emptyMessage =
-            document.createElement(
-                "p"
-            );
-
-
-        emptyMessage.className =
-            "testimonial-empty";
-
-
-        emptyMessage.textContent =
-            "Client testimonials will appear here once approved.";
-
-
-        testimonialGrid.appendChild(
-            emptyMessage
-        );
+        testimonialGrid.innerHTML = `
+            <p class="testimonial-loading">
+                Client testimonials will appear here
+                once approved.
+            </p>
+        `;
 
     }
 
 
     /*
      * =========================================================
-     * SUBMIT TESTIMONIAL
-     * =========================================================
-     */
-
-    if (testimonialForm) {
-
-        testimonialForm.addEventListener(
-            "submit",
-            async (event) => {
-
-                event.preventDefault();
-
-
-                if (!feedbackStatus) {
-                    return;
-                }
-
-
-                const name =
-                    document
-                        .getElementById(
-                            "client-name"
-                        )
-                        .value
-                        .trim();
-
-
-                const business =
-                    document
-                        .getElementById(
-                            "business-name"
-                        )
-                        .value
-                        .trim();
-
-
-                const role =
-                    document
-                        .getElementById(
-                            "client-role"
-                        )
-                        .value
-                        .trim();
-
-
-                const rating =
-                    document
-                        .getElementById(
-                            "rating"
-                        )
-                        .value
-                        .trim();
-
-
-                const testimonial =
-                    document
-                        .getElementById(
-                            "testimonial"
-                        )
-                        .value
-                        .trim();
-
-
-                if (
-                    !name ||
-                    !business ||
-                    !role ||
-                    !rating ||
-                    !testimonial
-                ) {
-
-                    feedbackStatus.textContent =
-                        "Please complete all fields.";
-
-                    return;
-
-                }
-
-
-                feedbackStatus.textContent =
-                    "Preparing your feedback submission...";
-
-
-                /*
-                 * IMPORTANT:
-                 *
-                 * A browser should NOT contain a GitHub
-                 * personal access token.
-                 *
-                 * Therefore the public website will
-                 * prepare the testimonial data and open
-                 * GitHub with the information ready to
-                 * submit.
-                 */
-
-
-                const issueTitle =
-                    `Testimonial — ${name}`;
-
-
-                const issueBody =
-`Name: ${name}
-Business: ${business}
-Role: ${role}
-Rating: ${rating}
-Feedback: ${testimonial}
-
----
-Submitted through portfolio testimonial form.`;
-
-
-                const githubUrl =
-                    `https://github.com/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}`;
-
-
-                feedbackStatus.textContent =
-                    "Opening GitHub so you can submit your testimonial...";
-
-
-                window.open(
-                    githubUrl,
-                    "_blank"
-                );
-
-            }
-        );
-
-    }
-
-
-    /*
-     * =========================================================
-     * START TESTIMONIAL SYSTEM
+     * START
      * =========================================================
      */
 
